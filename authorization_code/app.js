@@ -15,7 +15,12 @@ var cookieParser = require('cookie-parser');
 
 var client_id = '642e147a2f824f8eb9ceaa4cb5e73447'; // Your client id
 var client_secret = '57a2722d4f5f4878be827d5025f445da'; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var redirect_uri = 'http://amyhynes.me/'; // Your redirect uri
+
+var user_id = "amyh33";
+var token = "Bearer BQDuoPubojKH1deW2EjJZ2ic8t-KbqOCRHFjwtRAl4YYq8pBWO5viuRFPRYvrNGhenAKvNgTQm3zUIM1zekh3MKuti_9aAgrDRXsiC_W77nOw7UOoP-A01OAIsqoaTMIt4vuyK457ECg-Cs"
+var playlists_url = "https://api.spotify.com/v1/users/"+user_id+"/playlists";
+var playlistList = [];
 
 /**
  * Generates a random string containing numbers and letters
@@ -142,6 +147,31 @@ app.get('/refresh_token', function(req, res) {
     }
   });
 });
+
+request({url:playlists_url, headers:{"Authorization":token}}, function(err, res){
+  if (res){
+    var playlists = JSON.parse(res.body);
+    playlists.items.forEach(function(playlist){
+      playlistList.push(playlist.name);
+      //console.log(playlist.name);
+    })
+    var playlist_url = playlists.items[0].href;
+    request({url:playlist_url, headers:{"Authorization":token}}, function(err, res){
+      if (res) {
+        var playlist = JSON.parse(res.body);
+        console.log("playlist: " + playlist.name);
+        playlist.tracks.items.forEach(function(track){
+          //console.log(track.track.name);
+        });
+      }
+    })
+    console.log(displayPlaylists());
+  }
+})
+
+function displayPlaylists(){
+  return playlistList;
+}
 
 console.log('Listening on 8888');
 app.listen(8888);
