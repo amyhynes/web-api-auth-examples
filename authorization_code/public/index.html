@@ -51,16 +51,12 @@
       </div>
     </script>
 
-    <script id="playlist-display" type="text/javascript">
-      <h2>Playlists</h2>
-      document.write(displayPlaylists());
-    </script>
-
     <script id="oauth-template" type="text/x-handlebars-template">
       <h2>oAuth info</h2>
       <dl class="dl-horizontal">
         <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
+        <dt>Playlists</dt><dd class="text-overflow">{{playlists}}</dd>
       </dl>
     </script>
 
@@ -142,6 +138,19 @@
         }
       })();
     </script>
+
+    <script>
+    function handler(e){
+        if (e.target.readyState == 4 && e.target.status == 200) {
+          e.target.playlists;
+        }
+    }
+
+    var r = new XMLHttpRequest();
+    r.open('GET', 'http://localhost:8888');
+    r.addEventListener(readystatechange, handler);
+    r.send();
+</script>
 
   </body>
 </html>
